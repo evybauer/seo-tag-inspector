@@ -1,4 +1,4 @@
-# TagSnippet - SEO Meta Tag Analyzer
+# [TagSnippet](https://seo-tag-inspector-six.vercel.app/) - SEO Meta Tag Analyzer
 
 A professional web application for analyzing and optimizing website SEO meta tags, Open Graph, Twitter Cards, and more. Get actionable recommendations to improve your search rankings and social media presence.
 
