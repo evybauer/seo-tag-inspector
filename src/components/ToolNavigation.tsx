@@ -34,7 +34,7 @@ const tools: Tool[] = [
     name: 'Keyword Generator',
     description: 'Find relevant keywords for your content strategy',
     icon: <Hash className="w-5 h-5" />,
-    status: 'coming-soon',
+    status: 'available',
     color: 'bg-purple-500'
   },
   {
@@ -119,7 +119,11 @@ export default function ToolNavigation() {
               }`}
             >
               {tool.status === 'available' ? (
-                <Link href={tool.id === 'meta-generator' ? '/meta-tag-generator' : '/'}>
+                <Link href={
+                  tool.id === 'meta-generator' ? '/meta-tag-generator' :
+                  tool.id === 'keyword-generator' ? '/keyword-generator' :
+                  '/'
+                }>
                   <div className="cursor-pointer">
                     {ToolContent}
                   </div>
