@@ -1,9 +1,10 @@
 'use client';
 
-import { Lightbulb, CheckCircle } from 'lucide-react';
+import { Lightbulb, CheckCircle, AlertTriangle, Info } from 'lucide-react';
+import { Recommendation } from '@/types/seo';
 
 interface RecommendationsProps {
-  recommendations: string[];
+  recommendations: Recommendation[];
 }
 
 export default function Recommendations({ recommendations }: RecommendationsProps) {
@@ -30,8 +31,19 @@ export default function Recommendations({ recommendations }: RecommendationsProp
       <div className="space-y-3">
         {recommendations.map((recommendation, index) => (
           <div key={index} className="flex items-start space-x-3">
-            <div className="flex-shrink-0 w-2 h-2 bg-slate-400 rounded-full mt-2"></div>
-            <p className="text-slate-700">{recommendation}</p>
+            <div className="flex-shrink-0 mt-1">
+              {recommendation.priority === 'High' ? (
+                <AlertTriangle className="w-4 h-4 text-red-500" />
+              ) : recommendation.priority === 'Medium' ? (
+                <Info className="w-4 h-4 text-orange-500" />
+              ) : (
+                <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
+              )}
+            </div>
+            <div className="flex-1">
+              <p className="text-slate-700 font-medium">{recommendation.action}</p>
+              <p className="text-slate-500 text-sm">{recommendation.category}</p>
+            </div>
           </div>
         ))}
       </div>

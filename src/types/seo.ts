@@ -9,6 +9,13 @@ export interface SEOMetaTag {
   bestPractice?: string;
 }
 
+export interface Recommendation {
+  action: string;
+  category: string;
+  priority: 'High' | 'Medium' | 'Low';
+  description?: string;
+}
+
 export interface SEOAnalysis {
   url: string;
   title: string;
@@ -37,7 +44,7 @@ export interface SEOAnalysis {
     socialPreview: number;
     technicalStructure: number;
   };
-  recommendations: string[];
+  recommendations: Recommendation[];
 }
 
 export interface PreviewData {

@@ -8,6 +8,7 @@ import MetaTagsAnalysis from '@/components/MetaTagsAnalysis';
 import PreviewCards from '@/components/PreviewCards';
 import Recommendations from '@/components/Recommendations';
 import ExportButtons from '@/components/ExportButtons';
+import DetailedReport from '@/components/DetailedReport';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function Home() {
@@ -213,6 +214,11 @@ export default function Home() {
                 {/* Preview Cards */}
                 <PreviewCards analysis={analysis} />
               </div>
+            </div>
+
+            {/* Detailed Report Section */}
+            <div className="mt-12">
+              <DetailedReport analysis={analysis} />
             </div>
           </div>
         )}

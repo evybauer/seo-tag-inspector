@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import { SEOAnalysis, SEOMetaTag } from '@/types/seo';
+import { SEOAnalysis, SEOMetaTag, Recommendation } from '@/types/seo';
 
 export class SEOAnalyzer {
   private $: cheerio.CheerioAPI;
@@ -332,37 +332,73 @@ export class SEOAnalyzer {
       socialPreview: number;
       technicalStructure: number;
     };
-  }): string[] {
-    const recommendations: string[] = [];
+  }): Recommendation[] {
+    const recommendations: Recommendation[] = [];
 
     if (!data.title) {
-      recommendations.push('Add a title tag to your page');
+      recommendations.push({
+        action: 'Add a title tag to your page',
+        category: 'On-Page SEO',
+        priority: 'High'
+      });
     } else if (data.title.length > 60) {
-      recommendations.push('Consider shortening your title to under 60 characters');
+      recommendations.push({
+        action: 'Consider shortening your title to under 60 characters',
+        category: 'On-Page SEO',
+        priority: 'Medium'
+      });
     }
 
     if (!data.description) {
-      recommendations.push('Add a meta description to improve click-through rates');
+      recommendations.push({
+        action: 'Add a meta description to improve click-through rates',
+        category: 'On-Page SEO',
+        priority: 'High'
+      });
     } else if (data.description.length > 160) {
-      recommendations.push('Consider shortening your meta description to under 160 characters');
+      recommendations.push({
+        action: 'Consider shortening your meta description to under 160 characters',
+        category: 'On-Page SEO',
+        priority: 'Medium'
+      });
     }
 
     if (!data.canonical) {
-      recommendations.push('Add a canonical URL to prevent duplicate content issues');
+      recommendations.push({
+        action: 'Add a canonical URL to prevent duplicate content issues',
+        category: 'On-Page SEO',
+        priority: 'Medium'
+      });
     }
 
     if (data.h1Tags.length === 0) {
-      recommendations.push('Add an H1 tag to your page for better SEO structure');
+      recommendations.push({
+        action: 'Add an H1 tag to your page for better SEO structure',
+        category: 'On-Page SEO',
+        priority: 'High'
+      });
     } else if (data.h1Tags.length > 1) {
-      recommendations.push('Consider using only one H1 tag per page');
+      recommendations.push({
+        action: 'Consider using only one H1 tag per page',
+        category: 'On-Page SEO',
+        priority: 'Medium'
+      });
     }
 
     if (!data.openGraph.title || !data.openGraph.description) {
-      recommendations.push('Add Open Graph tags for better social media sharing');
+      recommendations.push({
+        action: 'Add Open Graph tags for better social media sharing',
+        category: 'Social',
+        priority: 'Medium'
+      });
     }
 
     if (!data.twitter.card || !data.twitter.title) {
-      recommendations.push('Add Twitter Card tags for better Twitter sharing');
+      recommendations.push({
+        action: 'Add Twitter Card tags for better Twitter sharing',
+        category: 'Social',
+        priority: 'Medium'
+      });
     }
 
     return recommendations;
