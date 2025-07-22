@@ -120,6 +120,7 @@ export default function ToolNavigation() {
             >
               {tool.status === 'available' ? (
                 <Link href={
+                  tool.id === 'seo-analysis' ? '/seo-analysis' :
                   tool.id === 'meta-generator' ? '/meta-tag-generator' :
                   tool.id === 'keyword-generator' ? '/keyword-generator' :
                   tool.id === 'robots-generator' ? '/robots-generator' :

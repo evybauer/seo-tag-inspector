@@ -38,13 +38,13 @@ export default function PreviewCards({ analysis }: PreviewCardsProps) {
         </div>
         <div className="border border-slate-200 rounded-lg p-4 bg-slate-50">
           <div className="space-y-2">
-            <div className="text-sm text-emerald-700 font-medium">
+            <div className="text-sm text-emerald-700 font-medium break-all overflow-x-auto">
               {googlePreview.url}
             </div>
-            <div className="text-lg text-blue-600 font-medium hover:underline cursor-pointer">
+            <div className="text-lg text-blue-600 font-medium hover:underline cursor-pointer break-all overflow-x-auto">
               {googlePreview.title}
             </div>
-            <div className="text-sm text-slate-600">
+            <div className="text-sm text-slate-600 break-words">
               {googlePreview.description}
             </div>
           </div>
@@ -71,13 +71,13 @@ export default function PreviewCards({ analysis }: PreviewCardsProps) {
             )}
           </div>
           <div className="p-3">
-            <div className="text-sm text-slate-500 mb-1">
+            <div className="text-sm text-slate-500 mb-1 break-all overflow-x-auto">
               {facebookPreview.url}
             </div>
-            <div className="font-semibold text-slate-900 mb-1 line-clamp-2">
+            <div className="font-semibold text-slate-900 mb-1 line-clamp-2 break-all overflow-x-auto">
               {facebookPreview.title}
             </div>
-            <div className="text-sm text-slate-600 line-clamp-2">
+            <div className="text-sm text-slate-600 line-clamp-2 break-words">
               {facebookPreview.description}
             </div>
           </div>
@@ -104,13 +104,13 @@ export default function PreviewCards({ analysis }: PreviewCardsProps) {
             )}
           </div>
           <div className="p-3">
-            <div className="text-sm text-slate-500 mb-1">
+            <div className="text-sm text-slate-500 mb-1 break-all overflow-x-auto">
               {twitterPreview.url}
             </div>
-            <div className="font-semibold text-slate-900 mb-1 line-clamp-2">
+            <div className="font-semibold text-slate-900 mb-1 line-clamp-2 break-all overflow-x-auto">
               {twitterPreview.title}
             </div>
-            <div className="text-sm text-slate-600 line-clamp-2">
+            <div className="text-sm text-slate-600 line-clamp-2 break-words">
               {twitterPreview.description}
             </div>
           </div>
