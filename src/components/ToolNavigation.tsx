@@ -42,7 +42,7 @@ const tools: Tool[] = [
     name: 'Robots.txt Generator',
     description: 'Create robots.txt files for search engine crawling',
     icon: <FileCode className="w-5 h-5" />,
-    status: 'coming-soon',
+    status: 'available',
     color: 'bg-orange-500'
   },
   {
@@ -122,6 +122,7 @@ export default function ToolNavigation() {
                 <Link href={
                   tool.id === 'meta-generator' ? '/meta-tag-generator' :
                   tool.id === 'keyword-generator' ? '/keyword-generator' :
+                  tool.id === 'robots-generator' ? '/robots-generator' :
                   '/'
                 }>
                   <div className="cursor-pointer">
