@@ -9,6 +9,7 @@ import PreviewCards from '@/components/PreviewCards';
 import Recommendations from '@/components/Recommendations';
 import ExportButtons from '@/components/ExportButtons';
 import DetailedReport from '@/components/DetailedReport';
+import ToolNavigation from '@/components/ToolNavigation';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 
 export default function Home() {
@@ -129,9 +130,8 @@ export default function Home() {
             
             {/* Description */}
             <p className="text-lg sm:text-xl text-slate-200 font-normal max-w-3xl mx-auto leading-relaxed mb-10">
-              Analyze and optimize your website&apos;s SEO meta tags with 
-              <span className="font-semibold text-white"> professional insights</span> and 
-              <span className="font-semibold text-white"> actionable recommendations</span>
+              Your complete <span className="font-semibold text-white">SEO toolbox</span> for analyzing, generating, and optimizing 
+              all aspects of your website&apos;s search engine performance
             </p>
             
             {/* Feature Pills */}
@@ -140,19 +140,25 @@ export default function Home() {
                 <svg className="w-4 h-4 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-medium">Instant Analysis</span>
+                <span className="text-sm font-medium">SEO Analysis</span>
               </div>
               <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
                 <svg className="w-4 h-4 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-medium">Professional Reports</span>
+                <span className="text-sm font-medium">Meta Tag Generator</span>
               </div>
               <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
                 <svg className="w-4 h-4 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-medium">Actionable Insights</span>
+                <span className="text-sm font-medium">Keyword Generator</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
+                <svg className="w-4 h-4 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm font-medium">File Generators</span>
               </div>
             </div>
           </div>
@@ -233,21 +239,26 @@ export default function Home() {
 
         {/* Empty State */}
         {!analysis && !isLoading && !error && (
-          <div className="text-center py-12">
-            <div className="max-w-md mx-auto">
-              <div className="bg-slate-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+          <div className="space-y-8">
+            <div className="text-center py-8">
+              <div className="max-w-md mx-auto">
+                <div className="bg-slate-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-slate-900 mb-2">
+                  Ready to optimize your SEO?
+                </h3>
+                <p className="text-slate-600">
+                  Enter a URL above to analyze your website&apos;s SEO performance, or explore our tools to generate 
+                  meta tags, keywords, robots.txt, .htaccess files, and XML sitemaps.
+                </p>
               </div>
-              <h3 className="text-lg font-medium text-slate-900 mb-2">
-                Ready to analyze your website?
-              </h3>
-              <p className="text-slate-600">
-                Enter a URL above to get started with your SEO analysis. We&apos;ll check your meta tags, 
-                social media optimization, and provide actionable recommendations.
-              </p>
             </div>
+            
+            {/* Tool Navigation */}
+            <ToolNavigation />
           </div>
         )}
       </main>
