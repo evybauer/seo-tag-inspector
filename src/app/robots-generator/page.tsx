@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { ArrowLeft, Copy, Download, FileCode, Globe, Settings, Shield, Plus, X, Share2 } from 'lucide-react';
 import Link from 'next/link';
+import ToolHeader from '@/components/ToolHeader';
+import Toast from '@/components/Toast';
 
 interface RobotsRule {
   userAgent: string;
@@ -148,6 +150,7 @@ export default function RobotsGenerator() {
   const [showResults, setShowResults] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleSearchRobotChange = (robot: keyof RobotsConfig['searchRobots'], value: string) => {
     setConfig({
@@ -378,7 +381,8 @@ export default function RobotsGenerator() {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(generatedRobots);
-      alert('Robots.txt copied to clipboard!');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
     } catch (err) {
       console.error('Failed to copy: ', err);
     }
@@ -432,24 +436,24 @@ export default function RobotsGenerator() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <Toast
+        show={copied}
+        message="Copied to clipboard!"
+        icon={
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        }
+        color="green"
+        position="top"
+      />
+
       {/* Header */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center space-x-4">
-            <Link 
-              href="/" 
-              className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Back to SEO Toolbox</span>
-            </Link>
-            <div className="flex-1 text-center">
-              <h1 className="text-2xl font-bold text-slate-900">Robots.txt Generator</h1>
-              <p className="text-slate-600">Create robots.txt files to control search engine crawling</p>
-            </div>
-          </div>
-        </div>
-      </header>
+      <ToolHeader
+        title="Robots.txt Generator"
+        description="Create robots.txt files to control search engine crawling and optimize your website's indexing."
+        icon={<FileCode className="w-8 h-8 text-blue-600" />}
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowLeft, Copy, Download, FileText, Share2, Settings, FileCode } from 'lucide-react';
 import Link from 'next/link';
+import ToolHeader from '@/components/ToolHeader';
 
 interface MetaTagForm {
   title: string;
@@ -47,7 +48,7 @@ export default function MetaTagGenerator() {
     ogUrl: '',
     ogType: 'website',
     ogSiteName: '',
-    twitterCard: 'summary_large_image',
+    twitterCard: 'summary',
     twitterTitle: '',
     twitterDescription: '',
     twitterImage: '',
@@ -57,6 +58,7 @@ export default function MetaTagGenerator() {
 
   const [generatedCode, setGeneratedCode] = useState<string>('');
   const [showGeneratedCode, setShowGeneratedCode] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleInputChange = (field: keyof MetaTagForm, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -108,7 +110,8 @@ export default function MetaTagGenerator() {
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(generatedCode);
-      // You could add a toast notification here
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
     } catch (err) {
       console.error('Failed to copy: ', err);
     }
@@ -126,26 +129,41 @@ export default function MetaTagGenerator() {
     URL.revokeObjectURL(url);
   };
 
+  const shareCode = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Generated Meta Tags',
+          text: 'Check out these meta tags I generated:',
+          url: window.location.href
+        });
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      copyToClipboard();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center space-x-4">
-            <Link 
-              href="/" 
-              className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Back to SEO Toolbox</span>
-            </Link>
-            <div className="flex-1 text-center">
-              <h1 className="text-2xl font-bold text-slate-900">Meta Tag Generator</h1>
-              <p className="text-slate-600">Generate optimized meta tags for your web pages</p>
-            </div>
+      {/* Toast Notification */}
+      {copied && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2 animate-fade-in-out">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Copied to clipboard!</span>
           </div>
         </div>
-      </header>
+      )}
+
+      <ToolHeader
+        title="Meta Tag Generator"
+        description="Generate optimized meta tags for your web pages with comprehensive SEO optimization features."
+        icon={<FileText className="w-8 h-8 text-blue-600" />}
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -489,6 +507,13 @@ export default function MetaTagGenerator() {
                 >
                   <Download className="w-4 h-4" />
                   <span>Download</span>
+                </button>
+                <button
+                  onClick={shareCode}
+                  className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Share</span>
                 </button>
               </div>
             </div>

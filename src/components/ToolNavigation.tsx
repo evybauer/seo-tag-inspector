@@ -50,7 +50,7 @@ const tools: Tool[] = [
     name: '.htaccess Generator',
     description: 'Generate .htaccess files for Apache server optimization',
     icon: <Settings className="w-5 h-5" />,
-    status: 'coming-soon',
+    status: 'available',
     color: 'bg-red-500'
   },
   {
@@ -123,6 +123,7 @@ export default function ToolNavigation() {
                   tool.id === 'meta-generator' ? '/meta-tag-generator' :
                   tool.id === 'keyword-generator' ? '/keyword-generator' :
                   tool.id === 'robots-generator' ? '/robots-generator' :
+                  tool.id === 'htaccess-generator' ? '/htaccess-generator' :
                   '/'
                 }>
                   <div className="cursor-pointer">
