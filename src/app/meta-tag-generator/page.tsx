@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Copy, Download, Eye, FileText, Hash, Share2, Settings } from 'lucide-react';
+import { ArrowLeft, Copy, Download, FileText, Share2, Settings } from 'lucide-react';
 import Link from 'next/link';
 
 interface MetaTagForm {
@@ -56,7 +56,7 @@ export default function MetaTagGenerator() {
   });
 
   const [generatedCode, setGeneratedCode] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'form' | 'preview' | 'code'>('form');
+  const [showGeneratedCode, setShowGeneratedCode] = useState(false);
 
   const handleInputChange = (field: keyof MetaTagForm, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -149,349 +149,331 @@ export default function MetaTagGenerator() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Tab Navigation */}
-        <div className="mb-8">
-          <div className="border-b border-slate-200">
-            <nav className="-mb-px flex space-x-8">
-              <button
-                onClick={() => setActiveTab('form')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === 'form'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                <FileText className="w-4 h-4 inline mr-2" />
-                Form
-              </button>
-              <button
-                onClick={() => {
-                  generateMetaTags();
-                  setActiveTab('preview');
-                }}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === 'preview'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                <Eye className="w-4 h-4 inline mr-2" />
-                Preview
-              </button>
-              <button
-                onClick={() => {
-                  generateMetaTags();
-                  setActiveTab('code');
-                }}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === 'code'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                <Hash className="w-4 h-4 inline mr-2" />
-                Generated Code
-              </button>
-            </nav>
+        {/* Informational Header */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+          <h2 className="text-xl font-semibold text-blue-900 mb-3">
+            The meta tag generator will create description, keyword and other important meta tags for you with provided content.
+          </h2>
+          <p className="text-blue-800 leading-relaxed">
+            Meta tags are HTML tag content that provide metadata about your website such as description. 
+            Meta tags are used by search engines to help index and to provide relevant content in their search results.
+          </p>
+        </div>
+
+        {/* Form Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Basic Meta Tags */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
+                <FileText className="w-5 h-5 mr-2 text-blue-500" />
+                Basic Meta Tags
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Site Title *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="Title must be within 70 Characters"
+                    maxLength={70}
+                  />
+                  <div className="flex justify-between items-center mt-1">
+                    <p className="text-xs text-slate-500">Keep your title between 50-60 characters for optimal display in search results</p>
+                    <span className="text-xs text-slate-500">{formData.title.length}/70</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Site Description *
+                  </label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="Description must be within 150 Characters"
+                    maxLength={150}
+                  />
+                  <div className="flex justify-between items-center mt-1">
+                    <p className="text-xs text-slate-500">Write a compelling description that encourages users to click on your page</p>
+                    <span className="text-xs text-slate-500">{formData.description.length}/150</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Site Keywords (Separate with commas) *
+                  </label>
+                  <textarea
+                    value={formData.keywords}
+                    onChange={(e) => handleInputChange('keywords', e.target.value)}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="keyword1, keyword2, keyword3"
+                  />
+                  <div className="flex justify-between items-center mt-1">
+                    <p className="text-xs text-slate-500">Include relevant keywords that users might search for</p>
+                    <span className="text-xs text-slate-500">{formData.keywords.split(',').filter(k => k.trim()).length} keywords</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Canonical URL
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.canonical}
+                    onChange={(e) => handleInputChange('canonical', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="https://example.com/page"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Social Media Tags */}
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
+                <Share2 className="w-5 h-5 mr-2 text-green-500" />
+                Social Media Tags
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Open Graph Title
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.ogTitle}
+                    onChange={(e) => handleInputChange('ogTitle', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="Leave empty to use page title"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Open Graph Description
+                  </label>
+                  <textarea
+                    value={formData.ogDescription}
+                    onChange={(e) => handleInputChange('ogDescription', e.target.value)}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="Leave empty to use meta description"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Open Graph Image URL
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.ogImage}
+                    onChange={(e) => handleInputChange('ogImage', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Site Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.ogSiteName}
+                    onChange={(e) => handleInputChange('ogSiteName', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="Your website name"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Advanced Settings */}
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
+                <Settings className="w-5 h-5 mr-2 text-purple-500" />
+                Advanced Settings
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Allow robots to index your website?
+                  </label>
+                  <select
+                    value={formData.robots.includes('noindex') ? 'no' : 'yes'}
+                    onChange={(e) => handleInputChange('robots', e.target.value === 'yes' ? 'index, follow' : 'noindex, follow')}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
+                  >
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Allow robots to follow all links?
+                  </label>
+                  <select
+                    value={formData.robots.includes('nofollow') ? 'no' : 'yes'}
+                    onChange={(e) => {
+                      const currentIndex = formData.robots.includes('noindex') ? 'noindex' : 'index';
+                      const newFollow = e.target.value === 'yes' ? 'follow' : 'nofollow';
+                      handleInputChange('robots', `${currentIndex}, ${newFollow}`);
+                    }}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
+                  >
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    What is your site primary language?
+                  </label>
+                  <select
+                    value={formData.language}
+                    onChange={(e) => handleInputChange('language', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
+                  >
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="it">Italian</option>
+                    <option value="pt">Portuguese</option>
+                    <option value="ru">Russian</option>
+                    <option value="ja">Japanese</option>
+                    <option value="ko">Korean</option>
+                    <option value="zh">Chinese</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    What type of content will your site display?
+                  </label>
+                  <select
+                    value={formData.charset}
+                    onChange={(e) => handleInputChange('charset', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
+                  >
+                    <option value="UTF-8">UTF-8</option>
+                    <option value="ISO-8859-1">ISO-8859-1</option>
+                    <option value="UTF-16">UTF-16</option>
+                  </select>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="revisit"
+                    className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="revisit" className="text-sm font-medium text-slate-700">
+                    Search engines should revisit this page after
+                  </label>
+                  <input
+                    type="number"
+                    className="w-16 px-2 py-1 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
+                    placeholder="7"
+                    min="1"
+                    max="365"
+                  />
+                  <span className="text-sm text-slate-700">days.</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="author"
+                    className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor="author" className="text-sm font-medium text-slate-700">
+                    Author:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.author}
+                    onChange={(e) => handleInputChange('author', e.target.value)}
+                    className="flex-1 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="Your name or company"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Twitter Card Settings */}
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
+                <Share2 className="w-5 h-5 mr-2 text-blue-400" />
+                Twitter Card Settings
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Twitter Card Type
+                  </label>
+                  <select
+                    value={formData.twitterCard}
+                    onChange={(e) => handleInputChange('twitterCard', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
+                  >
+                    <option value="summary">summary</option>
+                    <option value="summary_large_image">summary_large_image</option>
+                    <option value="app">app</option>
+                    <option value="player">player</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Twitter Creator (@username)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.twitterCreator}
+                    onChange={(e) => handleInputChange('twitterCreator', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="@username"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Twitter Site (@username)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.twitterSite}
+                    onChange={(e) => handleInputChange('twitterSite', e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
+                    placeholder="@username"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Tab Content */}
-        {activeTab === 'form' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Basic Meta Tags */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
-                  <FileText className="w-5 h-5 mr-2 text-blue-500" />
-                  Basic Meta Tags
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Page Title *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.title}
-                      onChange={(e) => handleInputChange('title', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="Enter your page title"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Meta Description *
-                    </label>
-                    <textarea
-                      value={formData.description}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
-                      rows={3}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="Enter your meta description"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Keywords
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.keywords}
-                      onChange={(e) => handleInputChange('keywords', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="keyword1, keyword2, keyword3"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Author
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.author}
-                      onChange={(e) => handleInputChange('author', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="Your name or company"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Canonical URL
-                    </label>
-                    <input
-                      type="url"
-                      value={formData.canonical}
-                      onChange={(e) => handleInputChange('canonical', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="https://example.com/page"
-                    />
-                  </div>
-                </div>
-              </div>
+        {/* Generate Meta Tags Button */}
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => {
+              generateMetaTags();
+              setShowGeneratedCode(true);
+            }}
+            className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-md transition-colors shadow-lg"
+          >
+            Generate Meta Tags
+          </button>
+        </div>
 
-              {/* Social Media Tags */}
-              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
-                  <Share2 className="w-5 h-5 mr-2 text-green-500" />
-                  Social Media Tags
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Open Graph Title
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.ogTitle}
-                      onChange={(e) => handleInputChange('ogTitle', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="Leave empty to use page title"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Open Graph Description
-                    </label>
-                    <textarea
-                      value={formData.ogDescription}
-                      onChange={(e) => handleInputChange('ogDescription', e.target.value)}
-                      rows={2}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="Leave empty to use meta description"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Open Graph Image URL
-                    </label>
-                    <input
-                      type="url"
-                      value={formData.ogImage}
-                      onChange={(e) => handleInputChange('ogImage', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Site Name
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.ogSiteName}
-                      onChange={(e) => handleInputChange('ogSiteName', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="Your website name"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Advanced Settings */}
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
-                  <Settings className="w-5 h-5 mr-2 text-purple-500" />
-                  Advanced Settings
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Robots Meta
-                    </label>
-                    <select
-                      value={formData.robots}
-                      onChange={(e) => handleInputChange('robots', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
-                    >
-                      <option value="index, follow">index, follow</option>
-                      <option value="noindex, follow">noindex, follow</option>
-                      <option value="index, nofollow">index, nofollow</option>
-                      <option value="noindex, nofollow">noindex, nofollow</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Language
-                    </label>
-                    <select
-                      value={formData.language}
-                      onChange={(e) => handleInputChange('language', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
-                    >
-                      <option value="en">English</option>
-                      <option value="es">Spanish</option>
-                      <option value="fr">French</option>
-                      <option value="de">German</option>
-                      <option value="it">Italian</option>
-                      <option value="pt">Portuguese</option>
-                      <option value="ru">Russian</option>
-                      <option value="ja">Japanese</option>
-                      <option value="ko">Korean</option>
-                      <option value="zh">Chinese</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Character Encoding
-                    </label>
-                    <select
-                      value={formData.charset}
-                      onChange={(e) => handleInputChange('charset', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
-                    >
-                      <option value="UTF-8">UTF-8</option>
-                      <option value="ISO-8859-1">ISO-8859-1</option>
-                      <option value="UTF-16">UTF-16</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Open Graph Type
-                    </label>
-                    <select
-                      value={formData.ogType}
-                      onChange={(e) => handleInputChange('ogType', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
-                    >
-                      <option value="website">website</option>
-                      <option value="article">article</option>
-                      <option value="book">book</option>
-                      <option value="profile">profile</option>
-                      <option value="music.song">music.song</option>
-                      <option value="music.album">music.album</option>
-                      <option value="video.movie">video.movie</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* Twitter Card Settings */}
-              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
-                  <Share2 className="w-5 h-5 mr-2 text-blue-400" />
-                  Twitter Card Settings
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Twitter Card Type
-                    </label>
-                    <select
-                      value={formData.twitterCard}
-                      onChange={(e) => handleInputChange('twitterCard', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
-                    >
-                      <option value="summary">summary</option>
-                      <option value="summary_large_image">summary_large_image</option>
-                      <option value="app">app</option>
-                      <option value="player">player</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Twitter Creator (@username)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.twitterCreator}
-                      onChange={(e) => handleInputChange('twitterCreator', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="@username"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Twitter Site (@username)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.twitterSite}
-                      onChange={(e) => handleInputChange('twitterSite', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
-                      placeholder="@username"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'preview' && (
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">Preview</h3>
-            <div className="space-y-4">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-medium text-gray-900 mb-2">Google Search Result Preview</h4>
-                <div className="bg-white border border-gray-200 rounded p-3">
-                  <div className="text-blue-600 text-sm mb-1">{formData.canonical || 'https://example.com'}</div>
-                  <div className="text-lg text-blue-600 font-medium mb-1">{formData.title || 'Page Title'}</div>
-                  <div className="text-sm text-gray-600">{formData.description || 'Page description will appear here...'}</div>
-                </div>
-              </div>
-              
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-medium text-gray-900 mb-2">Facebook Share Preview</h4>
-                <div className="bg-white border border-gray-200 rounded p-3 max-w-md">
-                  {formData.ogImage && (
-                    <img src={formData.ogImage} alt="" className="w-full h-32 object-cover rounded mb-2" />
-                  )}
-                  <div className="text-sm text-gray-500 mb-1">{formData.ogSiteName || 'Website Name'}</div>
-                  <div className="font-medium text-gray-900 mb-1">{formData.ogTitle || formData.title || 'Page Title'}</div>
-                  <div className="text-sm text-gray-600">{formData.ogDescription || formData.description || 'Description...'}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'code' && (
-          <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+        {/* Generated Code Section */}
+        {showGeneratedCode && (
+          <div className="mt-8 bg-white rounded-lg shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-slate-900">Generated HTML Code</h3>
+              <h3 className="text-lg font-semibold text-slate-900">Your Generated Meta Tags</h3>
               <div className="flex space-x-2">
                 <button
                   onClick={copyToClipboard}
@@ -509,9 +491,13 @@ export default function MetaTagGenerator() {
                 </button>
               </div>
             </div>
-            <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto text-sm">
-              <code>{generatedCode}</code>
-            </pre>
+            <textarea
+              value={generatedCode}
+              readOnly
+              rows={20}
+              className="w-full p-4 bg-slate-900 text-slate-100 rounded-lg font-mono text-sm resize-none border-0 focus:outline-none"
+              placeholder="Generated meta tags will appear here..."
+            />
           </div>
         )}
       </main>
