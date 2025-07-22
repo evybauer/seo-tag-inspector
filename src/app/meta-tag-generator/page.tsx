@@ -215,7 +215,7 @@ export default function MetaTagGenerator() {
                       type="text"
                       value={formData.title}
                       onChange={(e) => handleInputChange('title', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="Enter your page title"
                     />
                   </div>
@@ -227,7 +227,7 @@ export default function MetaTagGenerator() {
                       value={formData.description}
                       onChange={(e) => handleInputChange('description', e.target.value)}
                       rows={3}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="Enter your meta description"
                     />
                   </div>
@@ -239,7 +239,7 @@ export default function MetaTagGenerator() {
                       type="text"
                       value={formData.keywords}
                       onChange={(e) => handleInputChange('keywords', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="keyword1, keyword2, keyword3"
                     />
                   </div>
@@ -251,7 +251,7 @@ export default function MetaTagGenerator() {
                       type="text"
                       value={formData.author}
                       onChange={(e) => handleInputChange('author', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="Your name or company"
                     />
                   </div>
@@ -263,7 +263,7 @@ export default function MetaTagGenerator() {
                       type="url"
                       value={formData.canonical}
                       onChange={(e) => handleInputChange('canonical', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="https://example.com/page"
                     />
                   </div>
@@ -285,7 +285,7 @@ export default function MetaTagGenerator() {
                       type="text"
                       value={formData.ogTitle}
                       onChange={(e) => handleInputChange('ogTitle', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="Leave empty to use page title"
                     />
                   </div>
@@ -297,7 +297,7 @@ export default function MetaTagGenerator() {
                       value={formData.ogDescription}
                       onChange={(e) => handleInputChange('ogDescription', e.target.value)}
                       rows={2}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="Leave empty to use meta description"
                     />
                   </div>
@@ -309,7 +309,7 @@ export default function MetaTagGenerator() {
                       type="url"
                       value={formData.ogImage}
                       onChange={(e) => handleInputChange('ogImage', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="https://example.com/image.jpg"
                     />
                   </div>
@@ -321,7 +321,7 @@ export default function MetaTagGenerator() {
                       type="text"
                       value={formData.ogSiteName}
                       onChange={(e) => handleInputChange('ogSiteName', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="Your website name"
                     />
                   </div>
@@ -344,7 +344,7 @@ export default function MetaTagGenerator() {
                     <select
                       value={formData.robots}
                       onChange={(e) => handleInputChange('robots', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
                     >
                       <option value="index, follow">index, follow</option>
                       <option value="noindex, follow">noindex, follow</option>
@@ -359,7 +359,7 @@ export default function MetaTagGenerator() {
                     <select
                       value={formData.language}
                       onChange={(e) => handleInputChange('language', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
                     >
                       <option value="en">English</option>
                       <option value="es">Spanish</option>
@@ -380,7 +380,7 @@ export default function MetaTagGenerator() {
                     <select
                       value={formData.charset}
                       onChange={(e) => handleInputChange('charset', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
                     >
                       <option value="UTF-8">UTF-8</option>
                       <option value="ISO-8859-1">ISO-8859-1</option>
@@ -394,7 +394,7 @@ export default function MetaTagGenerator() {
                     <select
                       value={formData.ogType}
                       onChange={(e) => handleInputChange('ogType', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
                     >
                       <option value="website">website</option>
                       <option value="article">article</option>
@@ -422,7 +422,7 @@ export default function MetaTagGenerator() {
                     <select
                       value={formData.twitterCard}
                       onChange={(e) => handleInputChange('twitterCard', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700"
                     >
                       <option value="summary">summary</option>
                       <option value="summary_large_image">summary_large_image</option>
@@ -438,7 +438,7 @@ export default function MetaTagGenerator() {
                       type="text"
                       value={formData.twitterCreator}
                       onChange={(e) => handleInputChange('twitterCreator', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="@username"
                     />
                   </div>
@@ -450,7 +450,7 @@ export default function MetaTagGenerator() {
                       type="text"
                       value={formData.twitterSite}
                       onChange={(e) => handleInputChange('twitterSite', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-slate-700 placeholder-slate-500"
                       placeholder="@username"
                     />
                   </div>
