@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Copy, Download, FileText, Share2, Settings } from 'lucide-react';
+import { ArrowLeft, Copy, Download, FileText, Share2, Settings, FileCode } from 'lucide-react';
 import Link from 'next/link';
 
 interface MetaTagForm {
@@ -463,9 +463,10 @@ export default function MetaTagGenerator() {
               generateMetaTags();
               setShowGeneratedCode(true);
             }}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-md transition-colors shadow-lg"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-md transition-colors shadow-lg flex items-center space-x-2 mx-auto"
           >
-            Generate Meta Tags
+            <FileCode className="w-5 h-5" />
+            <span>Generate</span>
           </button>
         </div>
 

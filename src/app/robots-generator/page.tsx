@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Copy, Download, FileCode, Globe, Settings, Shield, Plus, X } from 'lucide-react';
+import { ArrowLeft, Copy, Download, FileCode, Globe, Settings, Shield, Plus, X, Share2 } from 'lucide-react';
 import Link from 'next/link';
 
 interface RobotsRule {
@@ -16,6 +16,7 @@ interface RobotsConfig {
   crawlDelay: 'default' | '1' | '2' | '3' | '5' | '10';
   sitemap: string;
   host: string;
+  restrictedDirectories: string[];
   searchRobots: {
     // Google
     google: 'default' | 'allowed' | 'disallowed';
@@ -79,6 +80,7 @@ export default function RobotsGenerator() {
     crawlDelay: 'default',
     sitemap: 'http://example.com/sitemap.xml',
     host: '',
+    restrictedDirectories: ['/admin/', '/private/', '/temp/'],
     searchRobots: {
       // Google
       google: 'default',
@@ -226,6 +228,24 @@ export default function RobotsGenerator() {
     setConfig({ ...config, customRules: updatedRules });
   };
 
+  const addRestrictedDirectory = () => {
+    setConfig({
+      ...config,
+      restrictedDirectories: [...config.restrictedDirectories, '']
+    });
+  };
+
+  const updateRestrictedDirectory = (index: number, value: string) => {
+    const updatedDirectories = [...config.restrictedDirectories];
+    updatedDirectories[index] = value;
+    setConfig({ ...config, restrictedDirectories: updatedDirectories });
+  };
+
+  const removeRestrictedDirectory = (index: number) => {
+    const updatedDirectories = config.restrictedDirectories.filter((_, i) => i !== index);
+    setConfig({ ...config, restrictedDirectories: updatedDirectories });
+  };
+
   const generateRobotsTxt = () => {
     setIsGenerating(true);
     
@@ -242,6 +262,16 @@ export default function RobotsGenerator() {
       if (config.defaultBehavior === 'disallowed') {
         robotsContent += 'User-agent: *\n';
         robotsContent += 'Disallow: /\n\n';
+      } else {
+        // Add restricted directories for all robots
+        const validRestrictedDirs = config.restrictedDirectories.filter(dir => dir.trim());
+        if (validRestrictedDirs.length > 0) {
+          robotsContent += 'User-agent: *\n';
+          validRestrictedDirs.forEach(dir => {
+            robotsContent += `Disallow: ${dir}\n`;
+          });
+          robotsContent += '\n';
+        }
       }
       
       // Add specific robot rules
@@ -437,9 +467,9 @@ export default function RobotsGenerator() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Basic Configuration */}
+          {/* Left Column - Basic Configuration & Restricted Directories */}
           <div className="space-y-6">
-            {/* Simple Configuration Form */}
+            {/* Basic Configuration */}
             <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
               <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
                 <Globe className="w-5 h-5 mr-2 text-blue-500" />
@@ -510,6 +540,82 @@ export default function RobotsGenerator() {
               </div>
             </div>
 
+            {/* Restricted Directories */}
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
+                <Shield className="w-5 h-5 mr-2 text-red-500" />
+                Restricted Directories
+              </h3>
+              <p className="text-sm text-slate-600 mb-4">
+                These directories will be blocked from all search engines. Click common paths below or add your own custom paths.
+              </p>
+              <p className="text-sm text-slate-600 mb-4 italic">
+                The path is relative to root and must contain a trailing slash &ldquo;/&rdquo;
+              </p>
+              
+              {/* Quick Add Common Paths */}
+              <div className="mb-6 p-4 bg-slate-50 rounded-lg">
+                <h4 className="text-sm font-semibold text-slate-800 mb-3">Quick Add Common Paths</h4>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  {commonDisallowPaths.map((path, index) => {
+                    const isSelected = config.restrictedDirectories.includes(path);
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          if (!isSelected) {
+                            setConfig({
+                              ...config,
+                              restrictedDirectories: [...config.restrictedDirectories, path]
+                            });
+                          }
+                        }}
+                        className={`text-left p-2 border rounded transition-colors text-sm 
+                          ${isSelected
+                            ? 'bg-blue-100 border-blue-400 text-blue-800 cursor-default'
+                            : 'border-slate-200 bg-white text-slate-700 hover:bg-white hover:text-slate-900 cursor-pointer'}
+                        `}
+                        disabled={isSelected}
+                      >
+                        {path}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Custom Directory Inputs */}
+              <div className="space-y-3">
+                {config.restrictedDirectories.map((directory, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={directory}
+                      onChange={(e) => updateRestrictedDirectory(index, e.target.value)}
+                      className="flex-1 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-slate-700"
+                      placeholder="/admin/"
+                    />
+                    <button
+                      onClick={() => removeRestrictedDirectory(index)}
+                      className="text-red-600 hover:text-red-700 p-2"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={addRestrictedDirectory}
+                  className="text-red-600 hover:text-red-700 text-sm flex items-center space-x-1"
+                >
+                  <Plus className="w-3 h-3" />
+                  <span>Add Custom Directory</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Search Robots */}
+          <div className="space-y-6">
             {/* Search Robots Section */}
             <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Search Robots</h3>
@@ -810,27 +916,33 @@ export default function RobotsGenerator() {
               </div>
             </div>
 
-            {/* Advanced Options Toggle */}
-            <div className="text-center">
-              <button
-                onClick={() => setShowAdvanced(!showAdvanced)}
-                className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-2 mx-auto"
-              >
-                <Settings className="w-4 h-4" />
-                <span>{showAdvanced ? 'Hide' : 'Show'} Advanced Options</span>
-              </button>
-            </div>
           </div>
 
-          {/* Advanced Configuration */}
-          {showAdvanced && (
+
+        </div>
+
+        {/* Advanced Options Toggle */}
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-2 mx-auto"
+          >
+            <Settings className="w-4 h-4" />
+            <span>{showAdvanced ? 'Hide' : 'Show'} Advanced Options</span>
+          </button>
+        </div>
+
+        {/* Advanced Configuration */}
+        {showAdvanced && (
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Column - User Agent Rules & Templates */}
             <div className="space-y-6">
-              {/* User Agent Rules */}
+              {/* User Agent Rules & Templates */}
               <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-slate-900 flex items-center">
                     <Shield className="w-5 h-5 mr-2 text-green-500" />
-                    User Agent Rules
+                    User Agent Rules & Templates
                   </h3>
                   <button
                     onClick={addUserAgent}
@@ -840,6 +952,67 @@ export default function RobotsGenerator() {
                   </button>
                 </div>
 
+                {/* Quick Templates */}
+                <div className="mb-6 p-4 bg-slate-50 rounded-lg">
+                  <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center">
+                    <FileCode className="w-4 h-4 mr-2 text-orange-500" />
+                    Quick Templates
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <button
+                      onClick={() => {
+                        setConfig({
+                          ...config,
+                          userAgents: [{ userAgent: '*', allow: ['/'], disallow: ['/admin/', '/private/'] }],
+                          sitemap: config.sitemap,
+                          host: config.host,
+                          customRules: []
+                        });
+                      }}
+                      className="text-left p-3 border border-slate-200 rounded-lg hover:bg-white transition-colors bg-white"
+                    >
+                      <div className="font-medium text-slate-900">Standard Website</div>
+                      <div className="text-xs text-slate-600">Allow all, block admin areas</div>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setConfig({
+                          ...config,
+                          userAgents: [{ userAgent: '*', allow: ['/'], disallow: ['/admin/', '/api/', '/config/'] }],
+                          sitemap: config.sitemap,
+                          host: config.host,
+                          customRules: []
+                        });
+                      }}
+                      className="text-left p-3 border border-slate-200 rounded-lg hover:bg-white transition-colors bg-white"
+                    >
+                      <div className="font-medium text-slate-900">E-commerce Site</div>
+                      <div className="text-xs text-slate-600">Block admin, API, and config areas</div>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setConfig({
+                          ...config,
+                          userAgents: [
+                            { userAgent: '*', allow: ['/'], disallow: ['/admin/'] },
+                            { userAgent: 'Googlebot', allow: ['/'], disallow: [], crawlDelay: 1 }
+                          ],
+                          sitemap: config.sitemap,
+                          host: config.host,
+                          customRules: []
+                        });
+                      }}
+                      className="text-left p-3 border border-slate-200 rounded-lg hover:bg-white transition-colors bg-white"
+                    >
+                      <div className="font-medium text-slate-900">Google Optimized</div>
+                      <div className="text-xs text-slate-600">Special rules for Googlebot</div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* User Agent Rules */}
                 <div className="space-y-6">
                   {config.userAgents.map((userAgent, userAgentIndex) => (
                     <div key={userAgentIndex} className="border border-slate-200 rounded-lg p-4">
@@ -967,7 +1140,10 @@ export default function RobotsGenerator() {
                   ))}
                 </div>
               </div>
+            </div>
 
+            {/* Right Column - Custom Rules */}
+            <div className="space-y-6">
               {/* Custom Rules */}
               <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -1003,91 +1179,11 @@ export default function RobotsGenerator() {
                   ))}
                 </div>
               </div>
-
-              {/* Quick Templates */}
-              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center">
-                  <FileCode className="w-5 h-5 mr-2 text-orange-500" />
-                  Quick Templates
-                </h3>
-                <div className="space-y-3">
-                  <button
-                    onClick={() => {
-                      setConfig({
-                        ...config,
-                        userAgents: [{ userAgent: '*', allow: ['/'], disallow: ['/admin/', '/private/'] }],
-                        sitemap: config.sitemap,
-                        host: config.host,
-                        customRules: []
-                      });
-                    }}
-                    className="w-full text-left p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
-                  >
-                    <div className="font-medium text-slate-900">Standard Website</div>
-                    <div className="text-sm text-slate-600">Allow all, block admin areas</div>
-                  </button>
-                  
-                  <button
-                    onClick={() => {
-                      setConfig({
-                        ...config,
-                        userAgents: [{ userAgent: '*', allow: ['/'], disallow: ['/admin/', '/api/', '/config/'] }],
-                        sitemap: config.sitemap,
-                        host: config.host,
-                        customRules: []
-                      });
-                    }}
-                    className="w-full text-left p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
-                  >
-                    <div className="font-medium text-slate-900">E-commerce Site</div>
-                    <div className="text-sm text-slate-600">Block admin, API, and config areas</div>
-                  </button>
-                  
-                  <button
-                    onClick={() => {
-                      setConfig({
-                        ...config,
-                        userAgents: [
-                          { userAgent: '*', allow: ['/'], disallow: ['/admin/'] },
-                          { userAgent: 'Googlebot', allow: ['/'], disallow: [], crawlDelay: 1 }
-                        ],
-                        sitemap: config.sitemap,
-                        host: config.host,
-                        customRules: []
-                      });
-                    }}
-                    className="w-full text-left p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
-                  >
-                    <div className="font-medium text-slate-900">Google Optimized</div>
-                    <div className="text-sm text-slate-600">Special rules for Googlebot</div>
-                  </button>
-                </div>
-              </div>
-
-              {/* Common Disallow Paths */}
-              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">Common Disallow Paths</h3>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  {commonDisallowPaths.map((path, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        const updatedUserAgents = [...config.userAgents];
-                        updatedUserAgents[0].disallow.push(path);
-                        setConfig({ ...config, userAgents: updatedUserAgents });
-                      }}
-                      className="text-left p-2 border border-slate-200 rounded hover:bg-slate-50 transition-colors text-slate-700 hover:text-slate-900"
-                    >
-                      {path}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Generate Button */}
+        {/* Action Buttons */}
         <div className="mt-8 text-center">
           <button
             onClick={generateRobotsTxt}
@@ -1095,7 +1191,7 @@ export default function RobotsGenerator() {
             className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-bold py-3 px-8 rounded-md transition-colors shadow-lg flex items-center space-x-2 mx-auto"
           >
             <FileCode className="w-5 h-5" />
-            <span>{isGenerating ? 'Generating...' : 'Generate Robots.txt'}</span>
+            <span>Generate</span>
           </button>
         </div>
 
@@ -1103,29 +1199,52 @@ export default function RobotsGenerator() {
         {showResults && (
           <div className="mt-8 bg-white rounded-lg shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-slate-900">Generated Robots.txt</h3>
-              <div className="flex space-x-2">
+              <h3 className="text-lg font-semibold text-slate-900">Your Generated Robots.txt File</h3>
+              <div className="flex items-center space-x-2">
                 <button
                   onClick={copyToClipboard}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  className="flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm"
                 >
                   <Copy className="w-4 h-4" />
                   <span>Copy</span>
                 </button>
                 <button
                   onClick={downloadRobotsTxt}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                  className="flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download</span>
                 </button>
+                <button
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator.share({
+                        title: 'Generated Robots.txt File',
+                        text: 'Check out this robots.txt file I generated:',
+                        url: window.location.href
+                      });
+                    } else {
+                      copyToClipboard();
+                    }
+                  }}
+                  className="flex items-center space-x-2 px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors text-sm"
+                >
+                  <Share2 className="w-4 h-4" />
+                  <span>Share</span>
+                </button>
               </div>
             </div>
-            <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto text-sm font-mono">
-              <code>{generatedRobots}</code>
-            </pre>
+            <textarea
+              value={generatedRobots}
+              readOnly
+              rows={20}
+              className="w-full p-4 bg-slate-900 text-slate-100 rounded-lg font-mono text-sm resize-none border-0 focus:outline-none"
+              placeholder="Generated robots.txt content will appear here..."
+            />
           </div>
         )}
+
+
 
         {/* Tips Section */}
         <div className="mt-8 bg-white rounded-lg shadow-sm border border-slate-200 p-6">

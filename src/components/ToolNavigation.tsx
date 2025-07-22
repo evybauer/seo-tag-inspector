@@ -69,7 +69,7 @@ export default function ToolNavigation() {
       <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">
         SEO Toolbox
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
         {tools.map((tool) => {
           const ToolContent = (
             <div className="bg-white rounded-lg border border-slate-200 p-6 h-full">
@@ -112,7 +112,7 @@ export default function ToolNavigation() {
           return (
             <div
               key={tool.id}
-              className={`relative group transition-all duration-200 ${
+              className={`relative group transition-all duration-200 h-full ${
                 tool.status === 'available' 
                   ? 'hover:shadow-lg hover:-translate-y-1' 
                   : 'opacity-60 cursor-not-allowed'

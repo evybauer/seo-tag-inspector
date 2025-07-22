@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Copy, Download, Search } from 'lucide-react';
+import { ArrowLeft, Copy, Download, Search, FileCode } from 'lucide-react';
 import Link from 'next/link';
 
 interface KeywordResult {
@@ -395,7 +395,7 @@ export default function KeywordGenerator() {
             disabled={isGenerating || !inputText.trim()}
             className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-bold py-3 px-8 rounded-md transition-colors shadow-lg flex items-center space-x-2 mx-auto"
           >
-            <Search className="w-5 h-5" />
+            <FileCode className="w-5 h-5" />
             <span>Generate</span>
           </button>
         </div>
