@@ -58,7 +58,7 @@ const tools: Tool[] = [
     name: 'XML Sitemap Generator',
     description: 'Create XML sitemaps for better search engine indexing',
     icon: <Network className="w-5 h-5" />,
-    status: 'coming-soon',
+    status: 'available',
     color: 'bg-teal-500'
   }
 ];
@@ -124,6 +124,7 @@ export default function ToolNavigation() {
                   tool.id === 'keyword-generator' ? '/keyword-generator' :
                   tool.id === 'robots-generator' ? '/robots-generator' :
                   tool.id === 'htaccess-generator' ? '/htaccess-generator' :
+                  tool.id === 'sitemap-generator' ? '/xml-sitemap-generator' :
                   '/'
                 }>
                   <div className="cursor-pointer">
